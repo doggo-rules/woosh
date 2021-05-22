@@ -1,4 +1,4 @@
-use std::{env, ffi::OsStr, fs::canonicalize, path::PathBuf, process::{Command, Stdio}};
+use std::{env, fs::canonicalize, path::PathBuf, process::{Command, Stdio}};
 
 pub struct Shell {
     pub cd: String
