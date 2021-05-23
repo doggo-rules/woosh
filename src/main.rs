@@ -1,13 +1,15 @@
 mod commands;
 mod config;
 mod handler;
+mod helper;
 
 use std::env::{self, current_dir};
 use rustyline::Editor;
 
 fn main() {
     let home = env::var("HOME").unwrap();
-    let mut editor = Editor::<()>::new();
+    let mut editor = Editor::<helper::WooshHelper>::new();
+    editor.set_helper(helper::get_helper());
     let res = editor.load_history(&format!("{}/.woosh-history", home));
 
     if let Err(_) = res {
