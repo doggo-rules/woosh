@@ -1,7 +1,8 @@
 mod commands;
+mod config;
 mod handler;
 
-use std::{env::{self, current_dir}, process::exit};
+use std::{env::current_dir, process::exit};
 use rustyline::Editor;
 
 fn main() {
@@ -12,12 +13,8 @@ fn main() {
     };
 
     loop {
-        let input = editor.readline(
-                        format!(
-                            "{} $ ",
-                            state.cd.replace(env::var("HOME").unwrap().as_str(), "~")
-                        ).as_str()
-                    );
+        let conf = config::load_config(&state);
+        let input = editor.readline(conf.prompt.as_str());
 
         match input {
             Ok(command) =>
