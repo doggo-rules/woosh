@@ -1,19 +1,37 @@
-// TODO: Fix this huge import
 use std::borrow::Cow;
-use rustyline::{Context, completion::{Completer, FilenameCompleter, Pair}, error::ReadlineError, highlight::Highlighter, hint::{Hinter, HistoryHinter}, validate::Validator};
+use std::env;
+use std::fs::read_dir;
+use rustyline::Context;
+use rustyline::completion::{Completer, Pair};
+use rustyline::error::ReadlineError;
+use rustyline::highlight::Highlighter;
+use rustyline::hint::{Hinter, HistoryHinter};
+use rustyline::validate::Validator;
 use rustyline_derive::Helper;
 
 #[derive(Helper)]
 pub struct WooshHelper {
-    pub completer: FilenameCompleter,
     pub hinter: HistoryHinter
 }
 
 impl Completer for WooshHelper {
     type Candidate = Pair;
 
-    fn complete(&self, line: &str, pos: usize, ctx: &Context<'_>) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        self.completer.complete(line, pos, ctx)
+    fn complete(&self, _: &str, pos: usize, _: &Context<'_>) -> Result<(usize, Vec<Pair>), ReadlineError> {
+        let cd = env::var("PWD").unwrap();
+        let files = read_dir(cd).unwrap();
+
+        let mut candidates: Vec<Pair> = Vec::new();
+        for file in files {
+            let entry = file.unwrap();
+            let entry_name = entry.file_name().into_string().unwrap();
+            
+            candidates.push(Pair {
+                display: entry_name.clone(),
+                replacement: entry_name.clone()
+            });
+        }
+        Ok((pos, candidates))
     }
 }
 
@@ -35,7 +53,6 @@ impl Validator for WooshHelper {}
 
 pub fn get_helper() -> Option<WooshHelper> {
     Some(WooshHelper {
-        completer: FilenameCompleter::new(),
         hinter: HistoryHinter {}
     })
 }
