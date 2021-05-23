@@ -16,14 +16,26 @@ pub fn eval_cmd(cmd_name: String, cmd_args: &[String], state: &mut Shell) {
 }
 
 pub fn cmd_cd(args: &Vec<String>, state: &mut Shell) {
-    let path = args.get(1).unwrap();
-    let new_path = PathBuf::from(&state.cd)
-        .join(
-            path.replace("~", env::var("HOME").unwrap().as_str())
-        )
-        .display()
-        .to_string();
+    let p = args.get(1);
 
-    state.cd = canonicalize(new_path).unwrap().display().to_string();
-    return;
+    if let Some(path) = p {
+        let new_path = PathBuf::from(&state.cd)
+            .join(
+                path.replace("~", env::var("HOME").unwrap().as_str())
+            );
+
+        if !new_path.is_dir() {
+            println!("Err: Path is not a directory!");
+            return;
+        }
+
+        let cd = canonicalize(new_path.display().to_string());
+        if let Ok(pathb) = cd {
+            state.cd = pathb.display().to_string();
+        } else {
+            println!("Err: Directory not found!");
+        }
+    } else {
+        println!("Err: No path passed to cd!");
+    }
 }
