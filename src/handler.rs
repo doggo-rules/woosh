@@ -12,6 +12,10 @@ pub fn handle(command: String, state: &mut Shell) {
     } else {
         let args = args.unwrap();
 
+        if args.len() < 1 {
+            return;
+        }
+
         match args[0].as_str() {
             "cd" => commands::cmd_cd(&args, state),
             _ => {
