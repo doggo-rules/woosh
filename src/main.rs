@@ -38,6 +38,8 @@ fn main() {
             }
         }
 
-        editor.save_history(&format!("{}/.woosh-history", home)).unwrap();
+        env::set_var("PWD", state.cd.clone());
     }
+
+    editor.save_history(&format!("{}/.woosh-history", home)).unwrap();
 }
