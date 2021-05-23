@@ -20,9 +20,7 @@ pub fn cmd_cd(args: &Vec<String>, state: &mut Shell) {
 
     if let Some(path) = p {
         let new_path = PathBuf::from(&state.cd)
-            .join(
-                path.replace("~", env::var("HOME").unwrap().as_str())
-            );
+            .join(path);
 
         if !new_path.is_dir() {
             println!("Err: Path is not a directory!");

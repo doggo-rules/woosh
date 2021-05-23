@@ -1,4 +1,5 @@
 use crate::commands;
+use std::env;
 
 pub struct Shell {
     pub cd: String
@@ -56,6 +57,11 @@ fn parse_command(command: String) -> Result<Vec<String>, String> {
             ' ' => {
                 args.push(current.clone());
                 current = String::new();
+            },
+            '~' => {
+                if current == "" {
+                    current = env::var("HOME").unwrap();
+                }
             },
             _ => current.push(c)
         }
