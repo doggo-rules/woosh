@@ -1,5 +1,5 @@
 use std::process::{Command, Stdio};
-use std::{env, fs::canonicalize, path::PathBuf};
+use std::{fs::canonicalize, path::PathBuf};
 use crate::handler::Shell;
 
 pub fn eval_cmd(cmd_name: String, cmd_args: &[String], state: &mut Shell) {
