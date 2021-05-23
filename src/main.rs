@@ -1,3 +1,4 @@
+mod commands;
 mod handler;
 
 use std::{env::{self, current_dir}, process::exit};

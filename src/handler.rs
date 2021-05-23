@@ -1,4 +1,4 @@
-use std::{env, fs::canonicalize, path::PathBuf, process::{Command, Stdio}};
+use crate::commands;
 
 pub struct Shell {
     pub cd: String
@@ -12,30 +12,13 @@ pub fn handle(command: String, state: &mut Shell) {
     } else {
         let args = args.unwrap();
 
-        if args[0] == String::from("cd") {
-            let path = args.get(1).unwrap();
-            let new_path = PathBuf::from(&state.cd)
-                .join(
-                    path.replace("~", env::var("HOME").unwrap().as_str())
-                )
-                .display()
-                .to_string();
-
-            state.cd = canonicalize(new_path).unwrap().display().to_string();
-            return;
-        }
-
-        let cmd_name = &args.first().unwrap();
-        let cmd_args = &args[1..];
-        let output = Command::new(cmd_name)
-            .args(cmd_args)
-            .current_dir(state.cd.clone())
-            .stdin(Stdio::inherit())
-            .stdout(Stdio::inherit())
-            .output();
-
-        if let Err(_) = output {
-            println!("Err: File not found!");
+        match args[0].as_str() {
+            "cd" => commands::cmd_cd(&args, state),
+            _ => {
+                let cmd_name = args.first().unwrap();
+                let cmd_args = &args[1..];
+                commands::eval_cmd(cmd_name.clone(), cmd_args, state)
+            }
         }
     }
 }
