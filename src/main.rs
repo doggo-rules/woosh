@@ -2,7 +2,7 @@ mod commands;
 mod config;
 mod handler;
 
-use std::{env::{self, current_dir}, process::exit};
+use std::env::{self, current_dir};
 use rustyline::Editor;
 
 fn main() {
@@ -14,11 +14,12 @@ fn main() {
         println!("WARNING: Failed to load history file!");
     }
 
-    println!("Welcome to \x1b[1;31mWoosh\x1b[0m!");
-
     let mut state = handler::Shell {
         cd: current_dir().unwrap().display().to_string()
     };
+
+    let conf = config::load_config(&state);
+    println!("{}", conf.welcome);
 
     loop {
         let conf = config::load_config(&state);

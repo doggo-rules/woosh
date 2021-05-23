@@ -13,9 +13,25 @@ The prompt for the shell.
 \
 **Formats:**
 - cd = Current directory
+- date = Current date (dd/mm/yyyy)
+- time = Current time (hh:mm)
 
 **Examples:**
 ```yml
 # This is the default prompt
 prompt: "%{cd} $ "
+```
+
+#### Welcome
+**Description:**
+The welcome message shown when shell starts.
+\
+**Formats:**
+- date = Current date (dd/mm/yyyy)
+- time = Current time (hh:mm)
+- user = Current user
+
+**Examples:**
+```yml
+welcome: "Welcome %{user}\nCurrent date is %{date} %{time}."
 ```
